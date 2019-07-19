@@ -40,18 +40,38 @@ public class Usuario {
         return j;
     }
     
-    public int registrarUsuario(Usuario usuario, String pn,String ap,String id,String pass){
-        int nt=(int) (Math.random() * 500) + 1;
+    public int registrarUsuario(Usuario u,Tarjeta t, String pn,String ap,String id,String pass){
         
-        String sql="insert into Usuario (idUsuario,contraseña,idTarjeta,nombre) values ('"+id+"','"+pass+"',"+nt+",'"+pn+" "+ap+"');";
-        String sqlt="insert into Tarjeta (idTarjeta,saldo,ulTran) values ("+nt+","+0+",'"+"');";
-        Statement st,st1;
+        
+        String sql1="Select * from usuario";
+        String sql="insert into Usuario (idUsuario,contraseña,idTarjeta,nombre) values (?,?,?,?)";
+        String sqlt="insert into Tarjeta (idTarjeta,saldo,ulTran) values (?,?,?);";
+        Statement st;
         ResultSet result;
         try {
-            st = con.createStatement();
-            st1 = con.createStatement();
-            st.executeQuery(sqlt);
-            st1.executeQuery(sql);
+            st=con.createStatement();
+            result=st.executeQuery(sql1);
+            while (result.next()) {
+                if (id.equals(result.getString(1))) {
+                    return -1;
+                }
+            }
+
+            
+            ps=con.prepareStatement(sqlt);
+            ps.setInt(1,(t.getId()));
+            ps.setInt(2,(t.getSaldo()));
+            ps.setString(3,(t.getuTr()));
+            ps.executeUpdate();
+            
+           
+            ps=con.prepareStatement(sql);
+            ps.setString(1, u.getIdUsuario());
+            System.out.println(u.getIdUsuario());
+            ps.setString(2, u.getContraseña());
+            ps.setInt(3, (t.getId()));
+            ps.setString(4, u.getNombre());
+            ps.executeUpdate();
             
             
         } catch (SQLException e) {

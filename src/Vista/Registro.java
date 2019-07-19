@@ -1,5 +1,6 @@
 package Vista;
 
+import Metro.Tarjeta;
 import Metro.Usuario;
 import java.awt.*;
 import static java.awt.Color.*;
@@ -152,10 +153,19 @@ public class Registro extends JFrame {
                 pass = t4.getText();
                 vpass = t5.getText();
                 Usuario u = new Usuario();
+                u.setIdUsuario(us);
+                u.setContraseña(pass);
+                u.setNombre(pn + " " + ap);
+
+                int nt = (int) (Math.random() * 500) + 1;
+                Tarjeta t = new Tarjeta();
+                t.setId((nt));
+                t.setSaldo(0);
+                t.setuTr("");
                 if (!pass.equals(vpass)) {
                     JOptionPane.showMessageDialog(null, "Error");
                 } else {
-                    int h = u.registrarUsuario(u, pn, ap, us, pass);
+                    int h = u.registrarUsuario(u, t, pn, ap, us, pass);
                     if (h == 0) {
                         JOptionPane.showMessageDialog(null, "Usuario Registrado");
                     } else {
